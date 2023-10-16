@@ -8,6 +8,7 @@ const WorkoutForm = () => {
   const [load, setLoad] = useState('');
   const [reps, setReps] = useState('');
   const [error, setError] = useState('');
+  const [emptyFields, setEmptyFields] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,12 +27,14 @@ const WorkoutForm = () => {
 
     if (!response.ok) {
       setError(data.error);
+      setEmptyFields(data.emptyFields);
     }
     if (response.ok) {
       setTitle('');
       setLoad('');
       setReps('');
       setError('');
+      setEmptyFields([]);
       dispatch({ type: 'CREATE_WORKOUT', payload: data });
     }
 
@@ -46,6 +49,7 @@ const WorkoutForm = () => {
         type="text" 
         onChange={(e) => setTitle(e.target.value)}
         value={title}
+        className={emptyFields.includes('title') ? 'error' : ''}
       />
 
       <label>Load (in kg):</label>
@@ -53,6 +57,7 @@ const WorkoutForm = () => {
         type="number" 
         onChange={(e) => setLoad(e.target.value)}
         value={load}
+        className={emptyFields.includes('load') ? 'error' : ''}
       />
 
       <label>Reps:</label>
@@ -60,6 +65,7 @@ const WorkoutForm = () => {
         type="number" 
         onChange={(e) => setReps(e.target.value)}
         value={reps}
+        className={emptyFields.includes('reps') ? 'error' : ''}
       />
 
       <button type='submit'>Add workout:</button>
